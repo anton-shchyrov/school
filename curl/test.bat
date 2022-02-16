@@ -1,0 +1,1 @@
+curl -G -i -u naomi:gould http://localhost:7005/student/test

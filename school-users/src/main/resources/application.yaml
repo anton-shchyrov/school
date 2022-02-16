@@ -1,0 +1,136 @@
+#
+# Copyright (c) 2019, 2021 Oracle and/or its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+services:
+  # Address of config service
+  config: http://localhost:7000
+#  config: http://172.17.0.3:7000
+
+db:
+  source: jdbc
+  # Database connection settings
+  connection:
+    url: jdbc:firebirdsql://localhost:10000/school.fdb?charSet=utf-8
+#    url: jdbc:firebirdsql://172.17.0.2/school.fdb?charSet=utf-8
+    username: SYSDBA
+    password: masterkey
+    poolName: fb
+  statements:
+    user-auth: |
+      SELECT
+        usr."LOGIN",
+        usr."PASSWORD",
+        rs."NAME" AS "ROLE"
+      FROM
+        users usr
+        JOIN roles rs ON (
+          usr."ROLE" = rs."ID"
+        )
+      WHERE
+        usr."LOGIN" = :login
+    user-add: |
+      INSERT INTO users (
+        "LOGIN",
+        "PASSWORD",
+        "NAME",
+        "ROLE"
+      ) VALUES (
+        :login,
+        :password,
+        :name,
+        :role
+      )
+    user-del: |
+      DELETE FROM
+        users usr
+      WHERE
+        usr."LOGIN" = :login
+    journal-get: |
+      SELECT
+        jrn."DATE",
+        jrn."STUDENT_NAME",
+        jrn."GRADE",
+        jrn."GRADE_TYPE"
+      FROM
+        vw_journal jrn
+      WHERE
+        jrn."TEACHER_LOGIN" = :teacher AND
+        jrn."CLASS_NAME" = :class
+    class-subj-id: |
+      SELECT
+        cs."ID"
+      FROM
+        class_subj cs
+        JOIN classes cls ON (
+          cs."CLASS_ID" = cls."ID"
+        )
+        JOIN users usr ON (
+          cs."TEACHER_ID" = usr."ID"
+        )
+        JOIN subjects subj ON (
+          cs."SUBJ_ID" = subj."ID"
+        )
+      WHERE
+        cls."NAME" = :class AND
+        subj."NAME" = :subject AND
+        usr."LOGIN" = :teacher
+    student-id: |
+      SELECT
+        usr."ID"
+      FROM
+        users usr
+        JOIN students std ON (
+          usr."ID" = std."ID"
+        )
+      WHERE
+        usr."LOGIN" = :student
+    journal-add: |
+      INSERT INTO journal (
+        "STUDENT_ID",
+        "CLASS_SUBJ_ID",
+        "DATE",
+        "GRADE",
+        "GRADE_TYPE"
+      ) VALUES (
+        :student_id,
+        :class_subj_id,
+        :date,
+        :grade,
+        :grade_type
+      )
+    student-track: |
+      SELECT
+        subj."NAME" AS "SUBJECT",
+        teach."NAME" AS "TEACHER",
+        jrn."DATE",
+        jrn."GRADE",
+        jrn."GRADE_TYPE"
+      FROM
+        journal jrn
+        JOIN users std ON (
+          jrn."STUDENT_ID" = std."ID"
+        )
+        JOIN class_subj cl_subj ON (
+          jrn."CLASS_SUBJ_ID" = cl_subj."ID"
+        )
+        JOIN subjects subj ON (
+          cl_subj."SUBJ_ID" = subj."ID"
+        )
+        JOIN users teach ON (
+          cl_subj."TEACHER_ID" = teach."ID"
+        )
+      WHERE
+        std."LOGIN" = :student

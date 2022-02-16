@@ -1,0 +1,11 @@
+{
+  "class": "6B",
+  "subject": "Chemistry",
+  "date": "2022-02-01",
+  "gradeType": "current",
+  "grades": [
+    {"student": "yousef", "grade" : 3},
+    {"student": "elora", "grade" : 3},
+    {"student": "carlton", "grade" : 3},
+  ]
+}

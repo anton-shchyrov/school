@@ -1,0 +1,4 @@
+helidon-release-2.4.2
+/curl/curl.exe
+target/
+dependency-reduced-pom.xml
