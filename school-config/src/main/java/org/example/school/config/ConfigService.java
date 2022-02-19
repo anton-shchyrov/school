@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.example.school.protocol.Config;
 import org.example.school.protocol.ServiceConfig;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,6 +18,7 @@ import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 
+@ApplicationScoped
 @Path("/config")
 @Produces(MediaType.APPLICATION_JSON)
 public class ConfigService {
