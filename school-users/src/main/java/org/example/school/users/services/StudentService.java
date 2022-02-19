@@ -10,6 +10,10 @@ import org.example.school.users.protocol.student.StudentTrackItem;
 import org.example.school.users.protocol.teacher.GradeType;
 
 import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@ApplicationScoped
 @Path("/student")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
@@ -40,6 +45,11 @@ public class StudentService extends CustomService {
         if (dateToStr != null)
             res.put("date_to", LocalDate.parse(dateToStr, DateTimeFormatter.ISO_DATE));
         return res;
+    }
+
+    @Inject
+    public StudentService(@Named("school") DataSource dataSource) {
+        super(dataSource);
     }
 
     @GET

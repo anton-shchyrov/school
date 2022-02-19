@@ -19,15 +19,20 @@ services:
   config: http://localhost:7000
 #  config: http://172.17.0.3:7000
 
+security:
+  providers:
+    - abac:
+    - http-basic-auth:
+        realm: school-users
 db:
-  source: jdbc
-  # Database connection settings
-  connection:
-    url: jdbc:firebirdsql://localhost:10000/school.fdb?charSet=utf-8
-#    url: jdbc:firebirdsql://172.17.0.2/school.fdb?charSet=utf-8
-    username: SYSDBA
-    password: masterkey
-    poolName: fb
+#  source: jdbc
+#  # Database connection settings
+#  connection:
+#    url: jdbc:firebirdsql://localhost:10000/school.fdb?charSet=utf-8
+##    url: jdbc:firebirdsql://172.17.0.2/school.fdb?charSet=utf-8
+#    username: SYSDBA
+#    password: masterkey
+#    poolName: fb
   statements:
     user-auth: |
       SELECT

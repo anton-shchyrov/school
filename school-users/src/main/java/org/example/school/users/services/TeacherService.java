@@ -11,6 +11,10 @@ import org.example.school.users.protocol.teacher.StudentStatus;
 import org.example.school.users.protocol.teacher.TrackResItem;
 
 import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -23,6 +27,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
+@ApplicationScoped
 @Path("/teacher")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
@@ -47,6 +52,11 @@ public class TeacherService extends CustomService {
         if (dateToStr != null)
             res.put("date_to", LocalDate.parse(dateToStr, DateTimeFormatter.ISO_DATE));
         return res;
+    }
+
+    @Inject
+    public TeacherService(@Named("school") DataSource dataSource) {
+        super(dataSource);
     }
 
     @GET

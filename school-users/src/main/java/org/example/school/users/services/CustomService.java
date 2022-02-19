@@ -5,9 +5,14 @@ import com.google.gson.GsonBuilder;
 import io.helidon.common.context.Contexts;
 import io.helidon.config.Config;
 import io.helidon.dbclient.DbClient;
+import io.helidon.dbclient.jdbc.JdbcDbClientProvider;
 import org.example.school.users.adapters.LocalDateAdapter;
 import org.example.school.users.adapters.StudentTrackItemFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class CustomService {
@@ -18,8 +23,22 @@ public class CustomService {
         .create();
     private static final Config STATEMENTS = Config.create().get("db.statements");
 
-    protected static DbClient getDbClient() {
-        return Contexts.globalContext().get(DbClient.class).orElseThrow();
+    private final DbClient dbClient;
+
+    public CustomService(DataSource dataSource) {
+        dbClient = new JdbcDbClientProvider().builder()
+            .connectionPool(() -> {
+                try {
+                    return dataSource.getConnection();
+                } catch (SQLException e) {
+                    throw new IllegalStateException("Error while setting up new connection", e);
+                }
+            }).config(Config.create().get("db"))
+            .build();
+    }
+
+    protected DbClient getDbClient() {
+        return dbClient;
     }
 
     protected static String getStatement(String name) {

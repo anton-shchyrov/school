@@ -10,12 +10,17 @@ import org.example.school.users.protocol.admin.UserLogin;
 import org.example.school.users.protocol.admin.UserModify;
 
 import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@ApplicationScoped
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
@@ -24,6 +29,11 @@ import javax.ws.rs.core.Response;
 public class UserService extends CustomService {
     private static final String OK_MESSAGE = GSON.toJson(Status.OK);
     private static final String NOT_FOUND_MESSAGE = GSON.toJson(Status.NOT_FOUND);
+
+    @Inject
+    public UserService(@Named("school") DataSource dataSource) {
+        super(dataSource);
+    }
 
     @POST
     @Path("add")
