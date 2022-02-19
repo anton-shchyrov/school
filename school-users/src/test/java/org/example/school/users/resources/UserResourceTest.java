@@ -1,4 +1,4 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import org.example.school.users.UserRole;
 import org.example.school.users.protocol.*;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
-class UserServiceTest extends CustomServiceTest {
+class UserResourceTest extends CustomResourceTest {
     private enum UserMethods {
         ADD, UPDATE, DELETE;
 

@@ -1,4 +1,4 @@
-package org.example.school.users;
+package org.example.school.users.services;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -7,6 +7,7 @@ import io.helidon.dbclient.DbClient;
 import io.helidon.dbclient.jdbc.JdbcDbClientProvider;
 import io.helidon.security.providers.httpauth.SecureUserStore;
 import io.helidon.security.providers.httpauth.spi.UserStoreService;
+import org.example.school.users.UserRole;
 
 import javax.sql.DataSource;
 import java.io.IOException;

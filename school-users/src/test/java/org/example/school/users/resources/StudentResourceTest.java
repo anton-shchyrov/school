@@ -1,4 +1,4 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import com.google.gson.reflect.TypeToken;
 import org.example.school.users.protocol.student.StudentTrackItem;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-class StudentServiceTest extends CustomServiceTest {
+class StudentResourceTest extends CustomResourceTest {
     private static final MethodInfo TRACK_METHOD = new MethodInfo("track", HttpMethod.GET);
 
     @Override

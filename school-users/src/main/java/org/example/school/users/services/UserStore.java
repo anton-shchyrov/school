@@ -1,16 +1,17 @@
-package org.example.school.users;
+package org.example.school.users.services;
 
 import io.helidon.common.reactive.Single;
 import io.helidon.dbclient.DbClient;
 import io.helidon.dbclient.DbRow;
 import io.helidon.security.providers.httpauth.SecureUserStore;
+import org.example.school.users.UserRole;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
-public class UserStore implements SecureUserStore {
+class UserStore implements SecureUserStore {
     private final DbClient dbClient;
     private final Map<String, UserAuth> users;
 

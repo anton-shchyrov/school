@@ -1,4 +1,4 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import io.helidon.security.SecurityContext;
 import io.helidon.security.annotations.Authenticated;
@@ -28,7 +28,7 @@ import java.util.*;
 @Authenticated
 @Authorized
 @RolesAllowed(UserRole.STUDENT_ROLE)
-public class StudentService extends CustomService {
+public class StudentResource extends CustomResource {
 
     private static Map<String, Object> trackParams(
         String student,
@@ -48,7 +48,7 @@ public class StudentService extends CustomService {
     }
 
     @Inject
-    public StudentService(@Named("school") DataSource dataSource) {
+    public StudentResource(@Named("school") DataSource dataSource) {
         super(dataSource);
     }
 

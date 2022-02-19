@@ -1,21 +1,18 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.helidon.common.context.Contexts;
 import io.helidon.config.Config;
 import io.helidon.dbclient.DbClient;
 import io.helidon.dbclient.jdbc.JdbcDbClientProvider;
 import org.example.school.users.adapters.LocalDateAdapter;
 import org.example.school.users.adapters.StudentTrackItemFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class CustomService {
+public class CustomResource {
     public static final Gson GSON = new GsonBuilder()
         .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
         .registerTypeAdapterFactory(new StudentTrackItemFactory())
@@ -25,7 +22,7 @@ public class CustomService {
 
     private final DbClient dbClient;
 
-    public CustomService(DataSource dataSource) {
+    public CustomResource(DataSource dataSource) {
         dbClient = new JdbcDbClientProvider().builder()
             .connectionPool(() -> {
                 try {

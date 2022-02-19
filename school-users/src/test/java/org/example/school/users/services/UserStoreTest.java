@@ -1,4 +1,4 @@
-package org.example.school.users;
+package org.example.school.users.services;
 
 import io.helidon.config.Config;
 import io.helidon.dbclient.DbClient;

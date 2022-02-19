@@ -1,5 +1,6 @@
-package org.example.school.users;
+package org.example.school.users.services;
 
+import org.example.school.users.UserRole;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;

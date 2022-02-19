@@ -1,4 +1,4 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import com.google.gson.Gson;
 import io.helidon.config.Config;
@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-abstract class CustomServiceTest {
+abstract class CustomResourceTest {
     protected enum HttpMethod {
         GET, POST
     }
@@ -67,7 +67,7 @@ abstract class CustomServiceTest {
     @BeforeAll
     public static void init() throws ExecutionException, InterruptedException, TimeoutException {
         server = Loader.startServer(Config.create(), 0).get(5, TimeUnit.SECONDS);
-        gson = CustomService.GSON;
+        gson = CustomResource.GSON;
 
         baseClient = ClientBuilder.newClient();
         authClient = ClientBuilder.newClient();

@@ -1,4 +1,4 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import io.helidon.security.annotations.Authenticated;
 import io.helidon.security.annotations.Authorized;
@@ -26,12 +26,12 @@ import javax.ws.rs.core.Response;
 @Authenticated
 @Authorized
 @RolesAllowed(UserRole.ADMIN_ROLE)
-public class UserService extends CustomService {
+public class UserResource extends CustomResource {
     private static final String OK_MESSAGE = GSON.toJson(Status.OK);
     private static final String NOT_FOUND_MESSAGE = GSON.toJson(Status.NOT_FOUND);
 
     @Inject
-    public UserService(@Named("school") DataSource dataSource) {
+    public UserResource(@Named("school") DataSource dataSource) {
         super(dataSource);
     }
 

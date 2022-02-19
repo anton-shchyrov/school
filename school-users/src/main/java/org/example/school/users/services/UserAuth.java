@@ -1,6 +1,7 @@
-package org.example.school.users;
+package org.example.school.users.services;
 
 import io.helidon.security.providers.httpauth.SecureUserStore;
+import org.example.school.users.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

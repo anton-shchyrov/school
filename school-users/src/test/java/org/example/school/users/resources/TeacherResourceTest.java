@@ -1,4 +1,4 @@
-package org.example.school.users.services;
+package org.example.school.users.resources;
 
 import com.google.gson.reflect.TypeToken;
 import org.example.school.users.protocol.teacher.GradeType;
@@ -15,7 +15,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.util.List;
 
-class TeacherServiceTest extends CustomServiceTest {
+class TeacherResourceTest extends CustomResourceTest {
     private static final String TEACHER_LOGIN = "naomi";
     private static final String TEACHER_PASSWORD = "gould";
 
