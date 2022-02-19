@@ -1,4 +1,4 @@
-package org.example.school.config;
+package org.example.school.resources;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,15 +21,15 @@ import java.nio.file.FileSystems;
 @ApplicationScoped
 @Path("/config")
 @Produces(MediaType.APPLICATION_JSON)
-public class ConfigService {
-    private static final String CONFIG_NAME = "config.json";
+public class ConfigResource {
+    public static final String CONFIG_NAME = "config.json";
     private static final Gson GSON = new GsonBuilder().create();
     private static final Config CONFIG;
 
     static {
         try {
             String configFolder = new File(
-                ConfigService.class
+                ConfigResource.class
                 .getProtectionDomain()
                 .getCodeSource()
                 .getLocation()

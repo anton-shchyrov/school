@@ -1,23 +1,47 @@
-package org.example.school.config;
+package org.example.school.config.resources;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.helidon.microprofile.tests.junit5.HelidonTest;
 import org.example.school.protocol.Config;
 import org.example.school.protocol.ServiceConfig;
+import org.example.school.resources.ConfigResource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @HelidonTest
-class ConfigServiceTest {
+class ConfigResourceTest {
     private static final Gson gson = new GsonBuilder().create();
+
+    @BeforeAll
+    public static void init() throws URISyntaxException {
+        String configFolder = new File(
+            ConfigResource.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI()
+        ).getParent();
+        java.nio.file.Path configFile = FileSystems.getDefault().getPath(configFolder, ConfigResource.CONFIG_NAME);
+        MatcherAssert.assertThat(
+            String.format("Config file %s is not exists", configFile.toAbsolutePath().toString()),
+            configFile.toFile().exists(),
+            Matchers.is(true)
+        );
+    }
 
     @Test
     public void testConfig(WebTarget target) {
