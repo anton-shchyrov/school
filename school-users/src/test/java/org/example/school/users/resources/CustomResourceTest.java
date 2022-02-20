@@ -1,19 +1,14 @@
 package org.example.school.users.resources;
 
 import com.google.gson.Gson;
-import io.helidon.config.Config;
-import io.helidon.webserver.WebServer;
-import org.example.school.users.Loader;
+import io.helidon.security.providers.httpauth.HttpBasicAuthProvider;
 import org.example.school.users.protocol.Status;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -24,15 +19,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-abstract class CustomResourceTest {
+public abstract class CustomResourceTest {
     protected enum HttpMethod {
         GET, POST
     }
@@ -47,60 +40,13 @@ abstract class CustomResourceTest {
         }
     }
 
-    protected static final String AUTH_USER_NAME_PARAM = HttpAuthenticationFeature.HTTP_AUTHENTICATION_USERNAME;
-    protected static final String AUTH_PASSWORD_PARAM = HttpAuthenticationFeature.HTTP_AUTHENTICATION_PASSWORD;
+    protected static final String AUTH_USER_NAME_PARAM = HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_USER;
+    protected static final String AUTH_PASSWORD_PARAM = HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_PASSWORD;
 
-    private static WebServer server;
-    private static Client baseClient;
-    private static Client authClient;
-
-    private static Gson gson;
-
-    public static Client getAuthClient() {
-        return authClient;
-    }
+    private final static Gson gson = CustomResource.GSON;
 
     public static Gson getGson() {
         return gson;
-    }
-
-    @BeforeAll
-    public static void init() throws ExecutionException, InterruptedException, TimeoutException {
-        server = Loader.startServer(Config.create(), 0).get(5, TimeUnit.SECONDS);
-        gson = CustomResource.GSON;
-
-        baseClient = ClientBuilder.newClient();
-        authClient = ClientBuilder.newClient();
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder().nonPreemptive().build();
-        authClient.register(feature);
-    }
-
-    @AfterAll
-    public static void done() throws InterruptedException {
-        baseClient.close();
-        authClient.close();
-        stopServer(server);
-    }
-
-    private static void stopServer(WebServer server) throws InterruptedException {
-        if (null == server) {
-            return;
-        }
-        CountDownLatch cdl = new CountDownLatch(1);
-        long t = System.nanoTime();
-        server.shutdown().thenAccept(webServer -> {
-            long time = System.nanoTime() - t;
-            System.out.println("Server shutdown in " + TimeUnit.NANOSECONDS.toMillis(time) + " ms");
-            cdl.countDown();
-        });
-
-        if (!cdl.await(5, TimeUnit.SECONDS)) {
-            throw new IllegalStateException("Failed to shutdown server within 5 seconds");
-        }
-    }
-
-    protected static String getBaseUri() {
-        return String.format("http://localhost:%d/", server.port());
     }
 
     protected abstract String getBasePath();
@@ -224,23 +170,19 @@ abstract class CustomResourceTest {
     }
 
     @Test
-    public void testUnprotectedMethods() {
-        WebTarget target = baseClient.target(getBaseUri());
+    public void testUnprotectedMethods(WebTarget target) {
         for (MethodInfo method : getAllMethods())
             testUnprotected(target, method);
     }
 
     @Test
-    public void testWrongPasswordMethods() {
-        WebTarget target = authClient.target(getBaseUri());
+    public void testWrongPasswordMethods(WebTarget target) {
         for (MethodInfo method : getAllMethods())
             testWrongPassword(target, method);
     }
 
-    protected void testWrongRoleMethods(String login, String password) {
-        WebTarget target = authClient.target(getBaseUri());
+    protected void testWrongRoleMethods(WebTarget target, String login, String password) {
         for (MethodInfo method : getAllMethods())
             testWrongRole(target, method, login, password);
     }
-
 }

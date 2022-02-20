@@ -1,6 +1,7 @@
 package org.example.school.users.resources;
 
 import com.google.gson.reflect.TypeToken;
+import io.helidon.microprofile.tests.junit5.HelidonTest;
 import org.example.school.users.protocol.teacher.GradeType;
 import org.example.school.users.protocol.teacher.StudentStatus;
 import org.example.school.users.protocol.teacher.TrackResItem;
@@ -15,6 +16,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.util.List;
 
+@HelidonTest
 class TeacherResourceTest extends CustomResourceTest {
     private static final String TEACHER_LOGIN = "naomi";
     private static final String TEACHER_PASSWORD = "gould";
@@ -53,14 +55,14 @@ class TeacherResourceTest extends CustomResourceTest {
     }
 
     @Test
-    public void testWrongRoleMethods() {
-        testWrongRoleMethods("admin", "adm");
-        testWrongRoleMethods("yousef", "chapman");
+    public void testWrongRoleMethods(WebTarget target) {
+        testWrongRoleMethods(target, "admin", "adm");
+        testWrongRoleMethods(target, "yousef", "chapman");
     }
 
     @Test
-    void track() throws IOException {
-        WebTarget target = getAuthClient().target(getBaseUri())
+    void track(WebTarget target) throws IOException {
+        target = target
             .queryParam("class", "5A")
             .queryParam("student", "ellis")
             .queryParam("dateFrom", "2022-01-02")
@@ -81,8 +83,7 @@ class TeacherResourceTest extends CustomResourceTest {
     }
 
     @Test
-    void trackWithoutClass() {
-        WebTarget target = getAuthClient().target(getBaseUri());
+    void trackWithoutClass(WebTarget target) {
         testFailedMethod(
             target,
             TeacherMethods.TRACK.getMethodInfo(),
@@ -94,8 +95,7 @@ class TeacherResourceTest extends CustomResourceTest {
     }
 
     @Test
-    void addGrades() throws IOException {
-        WebTarget target = getAuthClient().target(getBaseUri());
+    void addGrades(WebTarget target) throws IOException {
         String body =
             "{\"class\":\"6B\",\"subject\":\"Chemistry\",\"date\":\"2022-01-01\",\"gradeType\":\"current\",\"grades\":[{\"student\":\"yousef\",\"grade\":3}]}";
         testOKMethod(

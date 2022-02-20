@@ -7,23 +7,21 @@ import io.helidon.dbclient.DbClient;
 import io.helidon.dbclient.jdbc.JdbcDbClientProvider;
 import io.helidon.security.providers.httpauth.SecureUserStore;
 import io.helidon.security.providers.httpauth.spi.UserStoreService;
-import org.example.school.users.UserRole;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.Properties;
 
-public class UserStoreServiceImpl implements UserStoreService {
+public class DBUserStoreService implements UserStoreService {
     private static final String PROPERTIES_RESOURCE = "META-INF/microprofile-config.properties";
     private static final String PROPERTY_PREFIX = "javax.sql.DataSource.school.";
     private static final int PROPERTY_PREFIX_LEN = PROPERTY_PREFIX.length();
 
     private final DbClient dbClient;
 
-    public UserStoreServiceImpl() {
+    public DBUserStoreService() {
         Properties props = getDataSourceProperties();
         DataSource dataSource = new HikariDataSource(new HikariConfig(props));
         dbClient = new JdbcDbClientProvider().builder()
@@ -69,17 +67,6 @@ public class UserStoreServiceImpl implements UserStoreService {
 
     @Override
     public SecureUserStore create(Config config) {
-//        return new UserStoreImpl();
         return new UserStore(dbClient);
-    }
-}
-
-class UserStoreImpl implements SecureUserStore {
-
-    @Override
-    public Optional<User> user(String login) {
-        if ("admin".equals(login))
-            return Optional.of(new UserAuth("admin", "adm", UserRole.ADMIN));
-        return Optional.empty();
     }
 }

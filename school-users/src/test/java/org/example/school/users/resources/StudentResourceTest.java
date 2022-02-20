@@ -1,6 +1,7 @@
 package org.example.school.users.resources;
 
 import com.google.gson.reflect.TypeToken;
+import io.helidon.microprofile.tests.junit5.HelidonTest;
 import org.example.school.users.protocol.student.StudentTrackItem;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+@HelidonTest
 class StudentResourceTest extends CustomResourceTest {
     private static final MethodInfo TRACK_METHOD = new MethodInfo("track", HttpMethod.GET);
 
@@ -25,14 +27,14 @@ class StudentResourceTest extends CustomResourceTest {
     }
 
     @Test
-    public void testWrongRoleMethods() {
-        testWrongRoleMethods("admin", "adm");
-        testWrongRoleMethods("teacher", "teach");
+    public void testWrongRoleMethods(WebTarget target) {
+        testWrongRoleMethods(target, "admin", "adm");
+        testWrongRoleMethods(target, "teacher", "teach");
     }
 
     @Test
-    void track() throws IOException {
-        WebTarget target = getAuthClient().target(getBaseUri())
+    void track(WebTarget target) throws IOException {
+        target = target
             .queryParam("subject", "Chemistry")
             .queryParam("dateFrom", "2022-01-01")
             .queryParam("dateTo", "2022-01-01");

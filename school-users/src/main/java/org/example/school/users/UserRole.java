@@ -10,6 +10,7 @@ class UserRoleNames {
     private UserRoleNames() {}
 }
 
+@SuppressWarnings("unused")
 public enum UserRole {
     @SerializedName(UserRoleNames.ADMIN)
     ADMIN,

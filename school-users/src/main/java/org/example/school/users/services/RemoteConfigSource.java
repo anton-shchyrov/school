@@ -1,6 +1,13 @@
 package org.example.school.users.services;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.helidon.common.reactive.Single;
+import io.helidon.config.Config;
+import io.helidon.webclient.WebClient;
+import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.eclipse.microprofile.config.spi.ConfigSource;
+import org.eclipse.microprofile.config.spi.ConfigSourceProvider;
 import org.example.school.protocol.ServiceConfig;
 
 import java.util.HashMap;
@@ -11,8 +18,22 @@ public class RemoteConfigSource implements ConfigSource {
     private final Map<String, String> properties = new HashMap<>();
 
     public RemoteConfigSource() throws ExecutionException, InterruptedException {
-        ServiceConfig cfg = RemoteConfigLoader.loadConfig("users");
+        ServiceConfig cfg = loadConfig();
         properties.put("server.port", Integer.toString(cfg.port));
+    }
+
+    private static ServiceConfig loadConfig() throws ExecutionException, InterruptedException {
+        WebClient client = WebClient.builder()
+            .baseUri(Config.create().get("services.config")
+                .asString()
+                .orElseThrow(() -> new RuntimeException("Config key \"services.config\" not found"))
+            )
+            .build();
+        Single<String> response = client.get()
+            .path("/config/services/users")
+            .request(String.class);
+        Gson gson = new GsonBuilder().create();
+        return gson.fromJson(response.get(), ServiceConfig.class);
     }
 
     @Override

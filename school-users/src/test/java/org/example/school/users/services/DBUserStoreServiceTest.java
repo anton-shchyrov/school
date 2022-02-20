@@ -1,8 +1,8 @@
 package org.example.school.users.services;
 
 import io.helidon.config.Config;
-import io.helidon.dbclient.DbClient;
 import io.helidon.security.providers.httpauth.SecureUserStore;
+import io.helidon.security.providers.httpauth.spi.UserStoreService;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.Optional;
 
-class UserStoreTest {
-    private static UserStore store;
+class DBUserStoreServiceTest {
+    private static SecureUserStore store;
 
     @BeforeAll
     static void createDbClient() {
-        DbClient dbClient = DbClient.builder(Config.create().get("db")).build();
-        store = new UserStore(dbClient);
+        UserStoreService service = new DBUserStoreService();
+        store = service.create(null);
     }
 
     @Test

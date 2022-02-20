@@ -1,5 +1,7 @@
 package org.example.school.users.resources;
 
+import io.helidon.microprofile.tests.junit5.DisableDiscovery;
+import io.helidon.microprofile.tests.junit5.HelidonTest;
 import org.example.school.users.UserRole;
 import org.example.school.users.protocol.*;
 import org.example.school.users.protocol.admin.UserAdd;
@@ -14,6 +16,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
+@HelidonTest
 class UserResourceTest extends CustomResourceTest {
     private enum UserMethods {
         ADD, UPDATE, DELETE;
@@ -60,15 +63,14 @@ class UserResourceTest extends CustomResourceTest {
     }
 
     @Test
-    public void testWrongRoleMethods() {
-        testWrongRoleMethods("teacher", "teach");
-        testWrongRoleMethods("yousef", "chapman");
+    public void testWrongRoleMethods(WebTarget target) {
+        testWrongRoleMethods(target, "teacher", "teach");
+        testWrongRoleMethods(target, "yousef", "chapman");
     }
 
     @Test
-    public void testUsers() throws IOException {
+    public void testUsers(WebTarget target) throws IOException {
         UserAdd user = new UserAdd(USER_LOGIN, "123", "Test User", UserRole.TEACHER);
-        WebTarget target = getAuthClient().target(getBaseUri());
         testUserMethod(target, UserMethods.DELETE, getGson().toJson(user, UserLogin.class), null);
         testUserMethod(target, UserMethods.ADD, getGson().toJson(user));
         testUserMethod(target, UserMethods.UPDATE, getGson().toJson(new UserModify(USER_LOGIN, null, "New name")));
@@ -76,17 +78,15 @@ class UserResourceTest extends CustomResourceTest {
     }
 
     @Test
-    public void testNotExists() throws IOException {
+    public void testNotExists(WebTarget target) throws IOException {
         UserModify user = new UserModify(NOT_EXISTS_LOGIN, "new-pass", "Name");
-        WebTarget target = getAuthClient().target(getBaseUri());
         testUserMethod(target, UserMethods.UPDATE, getGson().toJson(user), Status.StatusEnum.NOT_FOUND);
         testUserMethod(target, UserMethods.DELETE, getGson().toJson(user, UserLogin.class), Status.StatusEnum.NOT_FOUND);
     }
 
     @Test
-    public void testEmptyUpdate() {
+    public void testEmptyUpdate(WebTarget target) {
         UserModify user = new UserModify(ADMIN_LOGIN, null, null);
-        WebTarget target = getAuthClient().target(getBaseUri());
         testFailedMethod(
             target,
             new MethodInfo(UserMethods.UPDATE.toString(), HttpMethod.POST),

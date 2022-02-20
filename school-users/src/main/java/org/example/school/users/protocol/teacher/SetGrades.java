@@ -23,17 +23,6 @@ public class SetGrades extends QueryData {
             checkNotEmptyString(student, "student");
             checkNotNull(grade, "grade");
         }
-
-        public void fillParams(Map<String, Object> params) {
-            params.put("student", student);
-            params.put("grade", grade);
-        }
-
-        public Map<String, Object> createParams() {
-            Map<String, Object> res = SetGrades.this.createParams();
-            fillParams(res);
-            return res;
-        }
     }
     @SerializedName("class")
     public final String className;
