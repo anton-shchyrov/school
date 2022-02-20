@@ -1,6 +1,5 @@
 package org.example.school.users.resources;
 
-import io.helidon.microprofile.tests.junit5.DisableDiscovery;
 import io.helidon.microprofile.tests.junit5.HelidonTest;
 import org.example.school.users.UserRole;
 import org.example.school.users.protocol.*;

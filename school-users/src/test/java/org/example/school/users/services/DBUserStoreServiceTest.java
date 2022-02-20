@@ -1,6 +1,5 @@
 package org.example.school.users.services;
 
-import io.helidon.config.Config;
 import io.helidon.security.providers.httpauth.SecureUserStore;
 import io.helidon.security.providers.httpauth.spi.UserStoreService;
 import org.hamcrest.MatcherAssert;

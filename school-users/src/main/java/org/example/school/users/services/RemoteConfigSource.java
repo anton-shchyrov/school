@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 import io.helidon.common.reactive.Single;
 import io.helidon.config.Config;
 import io.helidon.webclient.WebClient;
-import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.eclipse.microprofile.config.spi.ConfigSource;
-import org.eclipse.microprofile.config.spi.ConfigSourceProvider;
 import org.example.school.protocol.ServiceConfig;
 
 import java.util.HashMap;

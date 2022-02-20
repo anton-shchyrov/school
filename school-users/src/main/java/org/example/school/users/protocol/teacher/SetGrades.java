@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SetGrades extends QueryData {
-    public class StudentGrade {
+    public static class StudentGrade {
         public final String student;
         public final Integer grade;
 

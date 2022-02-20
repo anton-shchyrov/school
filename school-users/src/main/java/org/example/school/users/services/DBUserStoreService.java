@@ -38,9 +38,9 @@ public class DBUserStoreService implements UserStoreService {
     private Properties getDataSourceProperties() {
         Properties props = new Properties();
         try (
-            InputStream strm = getClass().getClassLoader().getResourceAsStream(PROPERTIES_RESOURCE)
+            InputStream stream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_RESOURCE)
         ) {
-            props.load(strm);
+            props.load(stream);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot read " + PROPERTIES_RESOURCE + " resource", e);
         }
